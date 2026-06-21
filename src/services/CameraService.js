@@ -35,7 +35,11 @@ export class CameraService {
     }
 
     const constraints = {
-      video: selectedCameraId ? { deviceId: { exact: selectedCameraId } } : { facingMode: 'environment' }
+      video: selectedCameraId === 'front' 
+        ? { facingMode: 'user' } 
+        : selectedCameraId === 'default' || !selectedCameraId
+          ? { facingMode: 'environment' } 
+          : { deviceId: { exact: selectedCameraId } }
     };
 
     try {

@@ -18,12 +18,25 @@ function App() {
   // Sync state.isRunning with ref for the loop
   useEffect(() => {
     isRunningRef.current = state.isRunning;
-    if (state.isRunning && !isProcessingRef.current) {
-      startDetectionLoop();
+    
+    if (state.isRunning) {
+      if (state.services.camera && !state.services.camera.isActive()) {
+        state.services.camera.startCamera().catch(err => {
+          console.error("Camera Error:", err);
+          actions.setError("Kamera tidak dapat diakses.");
+          actions.setRunning(false);
+        });
+      }
+      if (!isProcessingRef.current) {
+        startDetectionLoop();
+      }
     } else {
       stopDetectionLoop();
+      if (state.services.camera && state.services.camera.isActive()) {
+        state.services.camera.stopCamera();
+      }
     }
-  }, [state.isRunning]);
+  }, [state.isRunning, state.services.camera, actions]);
 
   // Handle tone changes
   useEffect(() => {
