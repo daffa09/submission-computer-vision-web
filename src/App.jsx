@@ -52,7 +52,7 @@ function App() {
         if (!isMounted) return;
 
         actions.setServices({ detector, camera, generator });
-        actions.setModelStatus('Siap');
+        actions.setModelStatus('Model AI Siap');
       } catch (error) {
         if (isMounted) {
           console.error("Initialization Error:", error);
@@ -146,7 +146,7 @@ function App() {
           error={state.error}
           currentTone={currentTone}
           onToneChange={setCurrentTone}
-          onToggleRunning={(running) => actions.setRunning(running)}
+          onToggleCamera={() => actions.setRunning(!state.isRunning)}
           onReset={() => actions.resetResults()}
         />
 
