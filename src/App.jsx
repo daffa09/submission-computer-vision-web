@@ -114,7 +114,7 @@ function App() {
                 const fact = await generator.generateFacts(result.className);
                 
                 setTimeout(() => {
-                  actions.setFunFactData({ text: fact, tone: currentTone });
+                  actions.setFunFactData(fact);
                   actions.setAppState('result');
                   isProcessingRef.current = false;
                 }, APP_CONFIG.factsGenerationDelay);
@@ -141,11 +141,7 @@ function App() {
     
   }, [state.services, currentTone, actions]);
 
-  // Expose copy to clipboard function globally or pass it down, wait, the App needs to pass it down or implement it
-  // Since we only need to "menyalin fakta ke clipboard", we can use a window func or do it here.
-  // Actually, InfoPanel likely uses window.copyToClipboard or similar? Let me check InfoPanel.jsx.
-  // Wait, I will just export a function or attach it to window if needed. 
-  // Let me view InfoPanel.jsx first to see how it expects copy functionality.
+
 
   return (
     <div className="app-container">
@@ -168,9 +164,9 @@ function App() {
           detectionResult={state.detectionResult}
           funFactData={state.funFactData}
           error={state.error}
-          onCopy={() => {
-            if (state.funFactData?.text) {
-              navigator.clipboard.writeText(state.funFactData.text)
+          onCopyFact={() => {
+            if (state.funFactData) {
+              navigator.clipboard.writeText(state.funFactData)
                 .then(() => alert("Teks berhasil disalin!"))
                 .catch(err => console.error("Gagal menyalin: ", err));
             }

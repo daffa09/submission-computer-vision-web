@@ -44,18 +44,25 @@ export class CameraService {
 
     try {
       this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (this.video) {
-        this.video.srcObject = this.stream;
-        return new Promise((resolve) => {
-          this.video.onloadedmetadata = () => {
-            this.video.play();
-            resolve();
-          };
-        });
+    } catch (firstError) {
+      // Fallback: di PC desktop, facingMode sering gagal, coba tanpa facingMode
+      console.warn('Camera constraint failed, trying fallback:', firstError);
+      try {
+        this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      } catch (fallbackError) {
+        console.error('Error starting camera:', fallbackError);
+        throw fallbackError;
       }
-    } catch (error) {
-      console.error('Error starting camera:', error);
-      throw error;
+    }
+
+    if (this.video && this.stream) {
+      this.video.srcObject = this.stream;
+      return new Promise((resolve) => {
+        this.video.onloadedmetadata = () => {
+          this.video.play();
+          resolve();
+        };
+      });
     }
   }
 

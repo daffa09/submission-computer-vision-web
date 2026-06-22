@@ -44,28 +44,61 @@ export class DetectionService {
   async predict(imageElement) {
     if (!this.model) return null;
 
-    return tf.tidy(() => {
-      // Create tensor from image
-      let tensor = tf.browser.fromPixels(imageElement)
-        .resizeNearestNeighbor([224, 224])
-        .toFloat();
-        
-      // Normalize to [-1, 1] as standard for Teachable Machine models (MobileNet)
-      tensor = tensor.div(tf.scalar(127.5)).sub(tf.scalar(1)).expandDims();
+    // tf.tidy tidak mendukung async, jadi kelola tensor secara manual
+    const tensorsToDispose = [];
 
-      const predictions = this.model.predict(tensor);
-      const scores = predictions.dataSync();
-      
-      const classId = predictions.argMax(-1).dataSync()[0];
+    try {
+      // Create tensor from image
+      const imgTensor = tf.browser.fromPixels(imageElement);
+      tensorsToDispose.push(imgTensor);
+
+      const resized = imgTensor.resizeNearestNeighbor([224, 224]);
+      tensorsToDispose.push(resized);
+
+      const floated = resized.toFloat();
+      tensorsToDispose.push(floated);
+
+      // Normalize to [-1, 1] as standard for Teachable Machine models (MobileNet)
+      const divisor = tf.scalar(127.5);
+      tensorsToDispose.push(divisor);
+
+      const one = tf.scalar(1);
+      tensorsToDispose.push(one);
+
+      const divided = floated.div(divisor);
+      tensorsToDispose.push(divided);
+
+      const normalized = divided.sub(one);
+      tensorsToDispose.push(normalized);
+
+      const batched = normalized.expandDims();
+      tensorsToDispose.push(batched);
+
+      const predictions = this.model.predict(batched);
+      tensorsToDispose.push(predictions);
+
+      // Gunakan async data() bukan dataSync() agar kompatibel dengan WebGPU
+      const scores = await predictions.data();
+
+      const argMaxTensor = predictions.argMax(-1);
+      tensorsToDispose.push(argMaxTensor);
+
+      const classIdArray = await argMaxTensor.data();
+      const classId = classIdArray[0];
       const score = scores[classId];
 
       return {
         className: this.labels[classId],
         score: score,
-        confidence: score * 100, // kept just in case
+        confidence: score * 100,
         isValid: true
       };
-    });
+    } finally {
+      // Bersihkan semua tensor
+      tensorsToDispose.forEach(t => {
+        if (t && !t.isDisposed) t.dispose();
+      });
+    }
   }
 
   // TODO [Basic] Periksa apakah model sudah dimuat dan siap digunakan
