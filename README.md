@@ -2,12 +2,12 @@
 <!-- slug: rootfacts-vegetable-detector -->
 <!-- title: RootFacts - AI Vegetable Detector -->
 <!-- description: Real-time vegetable detection PWA using TensorFlow.js and Transformers.js with AI-generated fun facts -->
-<!-- image: public/screenshots/rootfacts_banner.png -->
+<!-- image: https://raw.githubusercontent.com/daffa09/submission-computer-vision-web/master/public/screenshots/rootfacts_banner.png -->
 <!-- tags: react, vite, tensorflow.js, transformers.js, pwa, computer-vision -->
 
 # 🥦 RootFacts - AI Vegetable Detector
 
-![RootFacts Banner](public/screenshots/rootfacts_banner.png)
+![RootFacts Banner](https://raw.githubusercontent.com/daffa09/submission-computer-vision-web/master/public/screenshots/rootfacts_banner.png)
 
 A Progressive Web App that detects vegetables in real-time using **TensorFlow.js** (Computer Vision) and generates fun facts about them using **Transformers.js** (Generative AI) — all running **100% in the browser**, no server required.
 

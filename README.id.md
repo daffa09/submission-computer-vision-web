@@ -2,12 +2,12 @@
 <!-- slug: rootfacts-vegetable-detector -->
 <!-- title: RootFacts - AI Vegetable Detector -->
 <!-- description: Aplikasi PWA deteksi sayuran secara real-time menggunakan TensorFlow.js dan Transformers.js dengan fun fact berbasis AI -->
-<!-- image: public/screenshots/rootfacts_banner.png -->
+<!-- image: https://raw.githubusercontent.com/daffa09/submission-computer-vision-web/master/public/screenshots/rootfacts_banner.png -->
 <!-- tags: react, vite, tensorflow.js, transformers.js, pwa, computer-vision -->
 
 # 🥦 RootFacts - Detektor Sayuran AI
 
-![RootFacts Banner](public/screenshots/rootfacts_banner.png)
+![RootFacts Banner](https://raw.githubusercontent.com/daffa09/submission-computer-vision-web/master/public/screenshots/rootfacts_banner.png)
 
 Aplikasi Progressive Web App yang mendeteksi sayuran secara real-time menggunakan **TensorFlow.js** (Computer Vision) dan menghasilkan fun fact tentang sayuran tersebut menggunakan **Transformers.js** (Generative AI) — semuanya berjalan **100% di browser**, tanpa server.
 
